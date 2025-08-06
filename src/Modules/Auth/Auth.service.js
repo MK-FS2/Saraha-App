@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import sendMail from "../../Utils/Mail/index.js"
 import crypt from "crypto-js"
 import dotenv from "dotenv"
-import { SignToken } from "../../Utils/Token/index.js"
+import { SignToken, VerifyToken } from "../../Utils/Token/index.js"
 import {nanoid} from "nanoid"
 dotenv.config()
 
@@ -23,6 +23,7 @@ export const SignUp = async (req, res) => {
     OTP: NewOTP,
     OTP_Expire: new Date(Date.now() + Expire),
     isfromgoogle: false,
+    Profilepic: `${process.env.FileHandler}${req.file.path}` 
   });
 
   await NewUser.save();
@@ -100,12 +101,16 @@ export const Login = async (req, res) => {
 
   const ExpireTime = "3h";
   const TokenOutcome = SignToken(payload, ExpireTime);
+  const RefreashToken = SignToken(payload,"1w")
   if (!TokenOutcome) 
   {
     throw new Error("Server error");
   }
-
-  return res.json({ Token: TokenOutcome });
+ if(!RefreashToken)
+ {
+  throw new Error("Server Error")
+ }
+  return res.json({ Token: TokenOutcome ,RefreashToken});
 };
 
 export const ForgetPassword = async (req, res) => {
@@ -180,4 +185,23 @@ export const ResendCode = async (req,res)=>{
   User.Passwcode = PassOTP;
   User.passcodetime = new Date(Date.now() + Expire); 
   return res.json({message:"Code set"})
+}
+
+export const RefreashToken = async (req,res)=>{
+  let {authorization} = req.headers 
+   let auth = authorization.split(" ")[1]
+  const Decoded = VerifyToken(auth)
+   if(!Decoded)
+   {
+    throw new Error("Invalid refreash log in again",{cause:401})
+   }
+   const newpayload = 
+   {
+    id:Decoded.id,
+    FullName:Decoded.FullName,
+    Email:Decoded.Email
+   }
+   const NewToken = SignToken(newpayload,"3h")
+   const newrefreshToken = SignToken(newpayload,"1w")
+   return res.json({Token:NewToken,RefreashToken:newrefreshToken})
 }

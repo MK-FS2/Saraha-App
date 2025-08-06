@@ -73,6 +73,10 @@ const User_Schema = mongoose.Schema(
  {
    type:Date,
    default:undefined
+ },
+ Profilepic:{
+  type: String, 
+  required:true,
  }
 },
 {
