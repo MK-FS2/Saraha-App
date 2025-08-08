@@ -77,6 +77,11 @@ const User_Schema = mongoose.Schema(
  Profilepic:{
   type: String, 
   required:true,
+ },
+ ExpireAt:
+ {
+  type:Date,
+  default:new Date(Date.now()+30*24*60*60*1000)
  }
 },
 {

@@ -7,7 +7,7 @@ export default function Bootstrap(app,express)
    try 
    {
    app.use(express.json())
-   app.use(express.static("Uploads"))
+   app.use(express.static("./Uploads"))
    connectDB()
    
    app.use("/Auth",AuthRout)

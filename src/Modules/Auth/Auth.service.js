@@ -51,7 +51,7 @@ if(new Date(Unverifyed_user.OTP_Expire) < new Date())
     throw new Error("OTP expired")
 }
 
-await UserModel.findOneAndUpdate({ Email, OTP }, { $unset: { OTP: "", OTP_Expire: "" }, $set: { isVerified: true } });
+await UserModel.findOneAndUpdate({ Email, OTP }, { $unset: { OTP: "", OTP_Expire: "",ExpireAt:""}, $set: { isVerified: true } });
 return res.json({message:"Veriyfied"})
 }
 
@@ -110,7 +110,7 @@ export const Login = async (req, res) => {
  {
   throw new Error("Server Error")
  }
-  return res.json({ Token: TokenOutcome ,RefreashToken});
+ return res.json({ Token: TokenOutcome ,RefreashToken});
 };
 
 export const ForgetPassword = async (req, res) => {

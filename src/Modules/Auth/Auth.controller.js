@@ -6,7 +6,7 @@ import { ForgetPassword, Login, NewPassword, RefreashToken, Resend, ResendCode, 
 import { FileUpload } from "../../Middleware/UploadFiles/index.js";
 const AuthRout = Router()
 
-AuthRout.post("/SignUP",FileUpload("Profile_Photo").single("Profilepic"),validatator(SignUP_validation()),ErrorHandler(SignUp))
+AuthRout.post("/SignUP",FileUpload("Profile_Photo",["image/jpeg","image/png","image/gif"],3**1024*1024).single("Profilepic"),validatator(SignUP_validation()),ErrorHandler(SignUp))
 AuthRout.post("/VerifyEmail",ErrorHandler(VerfiyAccount))
 AuthRout.post("/Resend",ErrorHandler(Resend))
 AuthRout.post('/Login',ErrorHandler(Login))

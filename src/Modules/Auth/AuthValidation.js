@@ -9,6 +9,7 @@ const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[\d@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/
 
 const SignUp_Schema = Joi.object({
 Fname:Joi.string().required().min(2).max(10),
+Email:Joi.string().required().email().message("Invalid email format"),
 Lname:Joi.string().required().min(2).max(10),
 Phone:Joi.string().required().pattern(phonepattern).message("Phone number must start with 0 and be  11 digits."),
 Password:Joi.string().required().pattern(passwordPattern).message("The password must be atlest 6 character and have sympols and numbers")
